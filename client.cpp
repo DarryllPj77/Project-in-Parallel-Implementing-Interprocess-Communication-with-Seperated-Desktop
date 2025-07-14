@@ -8,7 +8,8 @@
 #include <sstream>
 #include <iomanip>
 
-#define PORT 8080
+#define SERVER_IP "192.168.56.101" //this is based on my network i don't know with yours
+#define PORT 9090
 #define BUFFER_SIZE 1024
 
 int client_socket;
@@ -204,17 +205,8 @@ void* send_answers(void* arg) {
     return nullptr;
 }
 
-int main(int argc, char* argv[]) {
+int main() {
     struct sockaddr_in server_addr;
-    std::string server_ip;
-    
-    // Get server IP from command line or prompt user
-    if (argc > 1) {
-        server_ip = argv[1];
-    } else {
-        std::cout << "Enter server IP address: ";
-        std::getline(std::cin, server_ip);
-    }
     
     // Create socket
     client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -226,14 +218,11 @@ int main(int argc, char* argv[]) {
     // Configure server address
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(PORT);
-    if (inet_pton(AF_INET, server_ip.c_str(), &server_addr.sin_addr) <= 0) {
-        std::cerr << "Invalid server IP address." << std::endl;
-        return 1;
-    }
+    inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr);
     
     // Connect to server
     if (connect(client_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
-        std::cerr << "Connection failed. Make sure the server is running at " << server_ip << ":" << PORT << std::endl;
+        std::cerr << "Connection failed. Make sure the server is running." << std::endl;
         return 1;
     }
     
@@ -242,8 +231,7 @@ int main(int argc, char* argv[]) {
     std::cout << "║              Network Client                  ║" << std::endl;
     std::cout << "╚══════════════════════════════════════════════╝" << std::endl;
     
-    std::cout << "\nConnected to server " << server_ip << ":" << PORT << std::endl;
-    std::cout << "Magbigay ng pangalan: ";
+    std::cout << "\nNakaconnect sa server! Magbigay ng pangalan: ";
     std::string name;
     std::getline(std::cin, name);
     
