@@ -9,7 +9,7 @@
 #include <iomanip>
 
 #define SERVER_IP "192.168.56.101" //this is based on my network i don't know with yours
-#define PORT 9090
+#define PORT 8080
 #define BUFFER_SIZE 1024
 
 int client_socket;
